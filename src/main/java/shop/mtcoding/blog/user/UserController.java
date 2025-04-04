@@ -19,8 +19,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(UserRequest.loginDTO dto) {
-        userService.회원가입(dto.getUsername(), dto.getPassword(), dto.getEmail());
+    public String join(UserRequest.JoinDTO joinDTO) {
+        userService.회원가입(joinDTO);
         return "redirect:/login-form";
     }
 
@@ -30,10 +30,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserRequest.loginDTO dto, HttpSession session) {
-        User user = userService.로그인(dto.getUsername(), dto.getPassword(), dto.getEmail());
+    public String login(UserRequest.LoginDTO loginDTO, HttpSession session) {
+        User user = userService.로그인(loginDTO);
         session.setAttribute("validatedUser", user);
-        System.out.println(session.getAttribute("validatedUser"));
+//        System.out.println(session.getAttribute("validatedUser"));
         return "redirect:/";
     }
 

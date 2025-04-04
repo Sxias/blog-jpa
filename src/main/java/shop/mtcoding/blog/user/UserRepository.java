@@ -21,9 +21,18 @@ public class UserRepository {
         q.executeUpdate();
     }
 
+    // 2. User 영속
     public void insertUser2(User user) {
         em.persist(user);
     }
+    // 3. User는 DB와 동기화
+
+    /*
+        1. createNativeQuery : 기본 쿼리
+        2. createQuery : JPA가 제공하는 객체 지향 쿼리
+        3. createNamedQuery : Query Method ( 함수 이름으로 쿼리 생성 )
+        4. createEntityGraph
+     */
 
     public User findByUsernameV1(User user) {
         Query q = em.createNativeQuery("select * from user_tb where username = ?;");
@@ -42,8 +51,8 @@ public class UserRepository {
     }
 
     public User findByUsernameV2(User user) {
-        Query q = em.createNativeQuery("select * from user_tb where username = ?;", User.class);
-        q.setParameter(1, user.getUsername());
+        Query q = em.createQuery("select u from User u where u.username = :username", User.class);
+        q.setParameter("username", user.getUsername());
         return (User) q.getSingleResult();
     }
 }
