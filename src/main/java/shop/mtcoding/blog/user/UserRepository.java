@@ -55,4 +55,8 @@ public class UserRepository {
         q.setParameter("username", user.getUsername());
         return (User) q.getSingleResult();
     }
+
+    public User findById(int id) {
+        return em.find(User.class, id);
+    }
 }

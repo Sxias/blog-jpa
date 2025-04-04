@@ -14,6 +14,13 @@ public class UserService {
         User user = joinDTO.toEntity();
         userRepository.insertUser2(user);
         // user 객체 : 영속 & 동기화됨
+
+
+        // TODO : 정리하기
+        System.out.println("------------------------");
+        userRepository.findById(5);
+        System.out.println("------------------------");
+
     }
 
 
