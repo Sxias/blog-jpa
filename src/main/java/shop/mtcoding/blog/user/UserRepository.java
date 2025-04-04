@@ -50,9 +50,13 @@ public class UserRepository {
         return foundUser;
     }
 
-    public User findByUsernameV2(User user) {
-        Query q = em.createQuery("select u from User u where u.username = :username", User.class);
-        q.setParameter("username", user.getUsername());
-        return (User) q.getSingleResult();
+    public User findByUsernameV2(String username) {
+        try {
+            Query q = em.createQuery("select u from User u where u.username = :username", User.class);
+            q.setParameter("username", username);
+            return (User) q.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
