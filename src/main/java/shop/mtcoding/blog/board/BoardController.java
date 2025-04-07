@@ -42,10 +42,14 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public String updateForm(@PathVariable("id") int id, HttpSession session) {
+    public String detailForm(@PathVariable("id") int id, HttpSession session, HttpServletRequest request) {
+        Integer userId = null;
+
         User validatedUser = (User) session.getAttribute("validatedUser");
-        if (validatedUser == null) throw new RuntimeException("인증이 필요합니다.");
-        return "board/update-form";
+        if(validatedUser != null) userId = validatedUser.getId();
+        BoardResponse.DetailDTO board = boardService.글상세보기(id, userId);
+        request.setAttribute("model", board);
+        return "board/detail";
     }
 
 }

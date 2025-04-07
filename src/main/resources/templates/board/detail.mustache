@@ -1,24 +1,26 @@
 {{> layout/header}}
 <div class="container p-5">
 
-    <!-- 수정삭제버튼 -->
-    <div class="d-flex justify-content-end">
-        <a href="/board/1/update-form" class="btn btn-warning me-1">수정</a>
-        <form action="/board/1/delete" method="post">
-            <button class="btn btn-danger">삭제</button>
-        </form>
-    </div>
+    {{#model.isOwner}}
+        <!-- 수정삭제버튼 -->
+        <div class="d-flex justify-content-end">
+            <a href="/board/{{model.id}}/update-form" class="btn btn-warning me-1">수정</a>
+            <form action="/board/{{model.id}}/delete" method="post">
+                <button class="btn btn-danger">삭제</button>
+            </form>
+        </div>
+    {{/model.isOwner}}
 
     <div class="d-flex justify-content-end">
-        <b>작성자</b> : ssar
+        <b>작성자</b> : {{model.username}}
     </div>
 
     <!-- 게시글내용 -->
     <div>
-        <h2><b>제목1</b></h2>
+        <h2><b>{{model.title}}</b></h2>
         <hr/>
         <div class="m-4 p-2">
-            내용1
+            {{model.content}}
         </div>
     </div>
 

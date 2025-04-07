@@ -23,4 +23,9 @@ public class BoardService {
     public List<Board> 글목록보기(Integer userId) {
         return boardRepository.findAll(userId);
     }
+
+    public BoardResponse.DetailDTO 글상세보기(int id, Integer sessionUserId) {
+        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(boardRepository.findByIdJoinUser(id), sessionUserId);
+        return detailDTO;
+    }
 }
