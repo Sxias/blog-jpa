@@ -26,22 +26,15 @@
 </div>
 
 <script>
+
+    // 1. username 변경 감지
     let isPermitted = false;
     let usernameInput = document.querySelector("#username");
     usernameInput.addEventListener("keyUp",()=>{
         isPermitted = false;
     });
 
-    function valid() {
-        if(!isPermitted) {
-            alert("아이디 중복체크를 해주세요.");
-            usernameInput.readOnly = false;
-            return false;
-        }
-
-        return true;
-    }
-
+    // 2. username 중복 체크
     async function permitRegister() {
         let username = usernameInput.value;
         let response = await fetch("/permit-register/"+username);
@@ -55,6 +48,17 @@
         } else {
             alert ("존재하는 아이디가 있습니다. 다시 입력해주세요.");
         }
+    }
+
+    // 3. 유효성 검사
+    function valid() {
+        if(!isPermitted) {
+            alert("아이디 중복체크를 해주세요.");
+            usernameInput.readOnly = false;
+            return false;
+        }
+
+        return true;
     }
 </script>
 

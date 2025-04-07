@@ -21,6 +21,7 @@ public class UserRequest {
     public class LoginDTO {
         private String username;
         private String password;
+        private String rememberMe; // on if checked, else null
 
         public User toEntity() {
             return User.builder().username(username).password(password).build();

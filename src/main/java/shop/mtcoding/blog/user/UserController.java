@@ -1,6 +1,9 @@
 package shop.mtcoding.blog.user;
 
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,7 +23,7 @@ public class UserController {
 
 
     @GetMapping("/join-form")
-    public String joinForm(){
+    public String joinForm() {
         return "user/join-form";
     }
 
@@ -36,10 +39,23 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO loginDTO, HttpSession session) {
+    public String login(UserRequest.LoginDTO loginDTO, HttpSession session, HttpServletResponse response) {
         User user = userService.로그인(loginDTO);
         session.setAttribute("validatedUser", user);
 //        System.out.println(session.getAttribute("validatedUser"));
+
+        if (loginDTO.getRememberMe() == null) {
+            Cookie cookie = new Cookie("username", null);
+            cookie.setMaxAge(0); // 0으로 설정하면 즉시 삭제
+            cookie.setPath("/"); // 경로를 명확히 지정해야 삭제 가능
+            response.addCookie(cookie);
+        } else {
+            Cookie cookie = new Cookie("username", loginDTO.getUsername());
+            cookie.setMaxAge(60 * 60 * 24 * 7);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
+
         return "redirect:/";
     }
 
