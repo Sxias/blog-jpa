@@ -22,7 +22,7 @@ public class Board {
     private Boolean isPublic;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User user; // ORM
 
     @CreationTimestamp
     private Timestamp createdAt;
