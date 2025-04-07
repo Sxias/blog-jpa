@@ -13,3 +13,5 @@ insert into board_tb(title, content, user_id, is_public, created_at)
 values ('제목3', '내용3', 2, true, now());
 insert into board_tb(title, content, user_id, is_public, created_at)
 values ('제목4', '내용4', 3, true, now());
+insert into board_tb(title, content, user_id, is_public, created_at)
+values ('제목5', '내용5', 1, false, now());

@@ -36,4 +36,16 @@ public class Board {
         this.user = user;
         this.createdAt = createdAt;
     }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", isPublic=" + isPublic +
+                ", user=" + user +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }
