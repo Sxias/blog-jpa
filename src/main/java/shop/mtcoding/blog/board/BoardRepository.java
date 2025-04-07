@@ -34,7 +34,7 @@ public class BoardRepository {
 
     public Board findByIdJoinUser(int id) {
         // inner join은 on 절 생략 가능
-        Query q = em.createQuery("select b from Board b join b.user where b.id = :id", Board.class);
+        Query q = em.createQuery("select b from Board b join fetch b.user where b.id = :id", Board.class);
         q.setParameter("id", id);
         return (Board) q.getSingleResult();
     }
