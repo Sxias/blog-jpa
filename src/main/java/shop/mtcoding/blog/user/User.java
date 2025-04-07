@@ -44,5 +44,10 @@ public class User {
                 '}';
     }
 
+    // 회원정보 수정 Setter
+    public void update(String password, String email) {
+        this.password = password;
+        this.email = email;
+    }
 
 }

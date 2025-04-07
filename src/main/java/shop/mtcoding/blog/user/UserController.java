@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog._core.Resp;
 
 import java.util.HashMap;
@@ -69,5 +66,21 @@ public class UserController {
     public @ResponseBody Resp<?> permitRegister(@PathVariable("username") String username) {
         Map<String, Object> dto = userService.유저네임중복체크(username);
         return Resp.ok(dto);
+    }
+
+    @GetMapping("/user/update-form")
+    public String updateForm(HttpSession session) {
+        User validatedUser = (User) session.getAttribute("validatedUser");
+        if (validatedUser == null) throw new RuntimeException("인증이 필요합니다.");
+        return "user/update-form";
+    }
+
+    @PostMapping("/user/update")
+    public String update(HttpSession session, UserRequest.UpdateDTO updateDTO) {
+        User validatedUser = (User) session.getAttribute("validatedUser");
+        if (validatedUser == null) throw new RuntimeException("인증이 필요합니다.");
+        User updatedUser = userService.유저갱신(validatedUser.getId(), updateDTO);
+        session.setAttribute("validatedUser", updatedUser);
+        return "redirect:/user/update-form";
     }
 }

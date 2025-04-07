@@ -28,5 +28,9 @@ public class UserRequest {
         }
     }
 
-
+    @Data
+    public class UpdateDTO {
+        private String password;
+        private String email;
+    }
 }
