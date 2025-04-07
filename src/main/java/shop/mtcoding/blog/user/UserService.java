@@ -14,7 +14,7 @@ public class UserService {
 
     @Transactional
     public void 회원가입(UserRequest.JoinDTO joinDTO) {
-        try{
+        try {
             User user = joinDTO.toEntity();
             userRepository.insertUser2(user);
         } catch (Exception e) {
@@ -28,7 +28,7 @@ public class UserService {
         User user = loginDTO.toEntity();
         User foundUser = userRepository.findByUsernameV2(user.getUsername());
         if (foundUser == null) throw new RuntimeException("일치하는 유저가 없습니다.");
-        if(!(foundUser.getPassword().equals(loginDTO.getPassword()))) throw new RuntimeException("아이디 또는 비밀번호가 틀립니다.");
+        if (!(foundUser.getPassword().equals(loginDTO.getPassword()))) throw new RuntimeException("아이디 또는 비밀번호가 틀립니다.");
         return foundUser;
     }
 
@@ -36,8 +36,16 @@ public class UserService {
         User user = userRepository.findByUsernameV2(username);
         Map<String, Object> dto = new HashMap<>();
 
-        if(user == null) dto.put("available", true);
+        if (user == null) dto.put("available", true);
         else dto.put("available", false);
         return dto;
     }
+
+    @Transactional
+    public User 유저갱신(Integer id, UserRequest.UpdateDTO updateDTO) {
+        User user = userRepository.findById(id);
+        if (user == null) throw new RuntimeException("회원을 찾을 수 없습니다.");
+        user.update(updateDTO.getPassword(), updateDTO.getEmail());
+        return user;
+    } // dirty checking -> 상태 변경 시 update
 }

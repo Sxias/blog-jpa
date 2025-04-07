@@ -59,4 +59,12 @@ public class UserRepository {
             return null;
         }
     }
+
+    public void updateUserById(User updateUser, Integer id) {
+
+    }
+
+    public User findById(Integer id) {
+        return em.find(User.class, id);
+    }
 }
