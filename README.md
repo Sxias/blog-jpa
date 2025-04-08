@@ -1,9 +1,11 @@
 # 스프링부트 블로그 만들기 v2
-> HTTP Method : Get, Post 만 사용
-> 
-> ajax만 JSON으로 처리
+
+> Get, Post 만 사용!! (x-www-form)
+> ajax만 json으로
+> ORM
 
 ## 1. 유저 (user_tb)
+
 - 회원가입
 - 로그인
 
@@ -20,7 +22,7 @@
 - 게시글 목록 페이징
 - 검색하기
 
-## 4. 좋아요 (love_tb)
+## 4. 러브 (love_tb)
 
 - 게시글 좋아요 (ajax)
 - 게시글 좋아요 취소 (ajax)

@@ -1,23 +1,52 @@
 package shop.mtcoding.blog.user;
 
-
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import shop.mtcoding.blog._core.Resp;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
 public class UserController {
     private final UserService userService;
+    private final HttpSession session;
 
+    // ViewResolver -> prefix = /templates/ -> suffix = .mustache
+    @GetMapping("/user/update-form")
+    public String updateForm() {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
+
+        return "user/update-form";
+    }
+
+    @PostMapping("/user/update")
+    public String update(UserRequest.UpdateDTO updateDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
+
+        // update user_tb set password = ?, email = ? where id = ?
+        User userPS = userService.회원정보수정(updateDTO, sessionUser.getId());
+
+        // 세션 동기화
+        session.setAttribute("sessionUser", userPS);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/check-username-available/{username}")
+    public @ResponseBody Resp<?> checkUsernameAvailable(@PathVariable("username") String username) {
+        Map<String, Object> dto = userService.유저네임중복체크(username);
+        return Resp.ok(dto);
+    }
 
     @GetMapping("/join-form")
     public String joinForm() {
@@ -36,20 +65,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO loginDTO, HttpSession session, HttpServletResponse response) {
-        User user = userService.로그인(loginDTO);
-        session.setAttribute("validatedUser", user);
-//        System.out.println(session.getAttribute("validatedUser"));
+    public String login(UserRequest.LoginDTO loginDTO, HttpServletResponse response) {
+        //System.out.println(loginDTO);
+        User sessionUser = userService.로그인(loginDTO);
+        session.setAttribute("sessionUser", sessionUser);
 
         if (loginDTO.getRememberMe() == null) {
             Cookie cookie = new Cookie("username", null);
-            cookie.setMaxAge(0); // 0으로 설정하면 즉시 삭제
-            cookie.setPath("/"); // 경로를 명확히 지정해야 삭제 가능
+            cookie.setMaxAge(0); // 즉시 만료
             response.addCookie(cookie);
         } else {
             Cookie cookie = new Cookie("username", loginDTO.getUsername());
             cookie.setMaxAge(60 * 60 * 24 * 7);
-            cookie.setPath("/");
             response.addCookie(cookie);
         }
 
@@ -57,30 +84,8 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    public String logout() {
         session.invalidate();
-        return "redirect:/";
-    }
-
-    @GetMapping("/permit-register/{username}")
-    public @ResponseBody Resp<?> permitRegister(@PathVariable("username") String username) {
-        Map<String, Object> dto = userService.유저네임중복체크(username);
-        return Resp.ok(dto);
-    }
-
-    @GetMapping("/user/update-form")
-    public String updateForm(HttpSession session) {
-        User validatedUser = (User) session.getAttribute("validatedUser");
-        if (validatedUser == null) throw new RuntimeException("인증이 필요합니다.");
-        return "user/update-form";
-    }
-
-    @PostMapping("/user/update")
-    public String update(HttpSession session, UserRequest.UpdateDTO updateDTO) {
-        User validatedUser = (User) session.getAttribute("validatedUser");
-        if (validatedUser == null) throw new RuntimeException("인증이 필요합니다.");
-        User updatedUser = userService.유저갱신(validatedUser.getId(), updateDTO);
-        session.setAttribute("validatedUser", updatedUser);
-        return "redirect:/user/update-form";
+        return "redirect:/login-form";
     }
 }

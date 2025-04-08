@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
+// setter 금지!!
 @NoArgsConstructor
 @Getter
 @Table(name = "user_tb")
@@ -33,21 +34,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
-    }
-
-    // 회원정보 수정 Setter
     public void update(String password, String email) {
         this.password = password;
         this.email = email;
     }
+
+    // 회원정보 수정 setter
 
 }

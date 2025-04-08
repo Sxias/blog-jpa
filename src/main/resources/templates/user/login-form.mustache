@@ -15,7 +15,7 @@
                 </div>
                 <!-- ✅ 공개 여부 체크박스 -->
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" checked>
+                    <input class="form-check-input" type="checkbox" name="rememberMe" checked>
                     <label class="form-check-label" for="isUsernameCheck">
                         아이디를 기억하겠습니까?
                     </label>
@@ -27,18 +27,18 @@
 </div>
 
 <script>
-    let username = getCookie("username");
-    if (username != null) document.querySelector("#username").value = username;
+    let rememberUsername = getCookie("username");
 
-    function getCookie(key) {
-        const cookies = document.cookie.split('; ');
-        for (let cookie of cookies) {
-            const [k, v] = cookie.split('=');
-            if (k == key) {
-                return v;
-            }
-        }
-        return null; // 해당 키가 없으면 null 반환
+    if (rememberUsername != null) {
+        document.querySelector("#username").value = rememberUsername;
+    }
+
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
     }
 </script>
 

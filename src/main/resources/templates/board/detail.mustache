@@ -1,8 +1,8 @@
 {{> layout/header}}
 <div class="container p-5">
 
+    <!-- 수정삭제버튼 -->
     {{#model.isOwner}}
-        <!-- 수정삭제버튼 -->
         <div class="d-flex justify-content-end">
             <a href="/board/{{model.id}}/update-form" class="btn btn-warning me-1">수정</a>
             <form action="/board/{{model.id}}/delete" method="post">
@@ -26,8 +26,15 @@
 
     <!-- AJAX 좋아요 영역 -->
     <div class="my-3 d-flex align-items-center">
-        <span class="my-like-heart" onclick="likeToggle()">&#10084;</span>
-        <span><b id="likeCount">12</b>명이 이 글을 좋아합니다</span>
+        {{#model.isLove}}
+            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:red"
+               onclick="deleteLove({{model.loveId}})"></i>
+        {{/model.isLove}}
+        {{^model.isLove}}
+            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:black"
+               onclick="saveLove()"></i>
+        {{/model.isLove}}
+        <span class="ms-1"><b id="likeCount">{{model.loveCount}}</b>명이 이 글을 좋아합니다</span>
     </div>
 
     <!-- 댓글 -->
@@ -72,10 +79,37 @@
 </div>
 
 <script>
-    function likeToggle() {
-        let likeHeart = document.querySelector('.my-like-heart');
-        console.log(likeHeart);
-        likeHeart.classList.toggle('liked');
+    let boardId = {{model.id}};
+
+    async function saveLove() {
+        let requestBody = {boardId: boardId};
+        let response = await fetch(`/love`, {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {"Content-Type": "application/json"}
+        });
+        let responseBody = await response.json(); // { loveId, loveCount }
+
+        // DOM 업데이트
+        let icon = document.querySelector('#likeIcon');
+        let likeCountSpan = document.querySelector('#likeCount');
+        icon.style.color = 'red';
+        icon.setAttribute('onclick', `deleteLove(${responseBody.loveId})`);
+        likeCountSpan.textContent = responseBody.loveCount;
+    }
+
+    async function deleteLove(loveId) {
+        let response = await fetch(`/love/${loveId}`, {
+            method: "DELETE"
+        });
+        let responseBody = await response.json(); // { loveCount }
+
+        // DOM 업데이트
+        let icon = document.querySelector('#likeIcon');
+        let likeCountSpan = document.querySelector('#likeCount');
+        icon.style.color = 'black';
+        icon.setAttribute('onclick', `saveLove()`);
+        likeCountSpan.textContent = responseBody.loveCount;
     }
 </script>
 

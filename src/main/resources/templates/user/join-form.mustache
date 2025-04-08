@@ -10,14 +10,18 @@
         <div class="card-body">
             <form action="/join" method="post" enctype="application/x-www-form-urlencoded" onsubmit="return valid()">
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Enter username" name="username" id="username" value="haha">
-                    <button type="button" class="btn btn-warning" onclick="permitRegister()">중복확인</button>
+                    <input type="text" class="form-control" placeholder="Enter username" name="username" id="username"
+                           value="haha">
+                    <button type="button" class="btn btn-warning" onclick="checkUsernameAvailable()">중복확인</button>
                 </div>
                 <div class="mb-3">
-                    <input type="password" class="form-control" placeholder="Enter password" name="password" value="1234">
+                    <input type="password" class="form-control" placeholder="Enter password" name="password"
+                           value="1234"
+                           id="password">
                 </div>
                 <div class="mb-3">
-                    <input type="email" class="form-control" placeholder="Enter email" name="email" value="haha@gmail.com">
+                    <input type="email" class="form-control" placeholder="Enter email" name="email"
+                           value="haha@nate.com">
                 </div>
                 <button type="submit" class="btn btn-primary form-control">회원가입</button>
             </form>
@@ -26,40 +30,40 @@
 </div>
 
 <script>
+    let isUsernameAvailable = false;
 
-    // 1. username 변경 감지
-    let isPermitted = false;
-    let usernameInput = document.querySelector("#username");
-    usernameInput.addEventListener("keyUp",()=>{
-        isPermitted = false;
+    // 1. 유저네임 변경 감지
+    let usernameDom = document.querySelector("#username");
+    usernameDom.addEventListener("keyup", () => {
+        isUsernameAvailable = false
     });
 
-    // 2. username 중복 체크
-    async function permitRegister() {
-        let username = usernameInput.value;
-        let response = await fetch("/permit-register/"+username);
+    // 2. 유저네임 중복 체크
+    async function checkUsernameAvailable() {
+        let username = document.querySelector("#username").value;
+        let response = await fetch("/check-username-available/" + username);
         let responseBody = await response.json();
-        // status = 200, msg = '성공', body : { available = true }
-        isPermitted = responseBody.body.available;
+        // status = 200, msg = 성공, body: { "available" : true }
+        isUsernameAvailable = responseBody.body.available;
 
-        if(isPermitted) {
-            alert("아이디 사용이 가능합니다.");
-            // usernameInput.readOnly = true;
+        if (isUsernameAvailable) {
+            alert("중복확인 완료");
         } else {
-            alert ("존재하는 아이디가 있습니다. 다시 입력해주세요.");
+            alert("동일한 유저네임이 존재합니다");
         }
     }
 
-    // 3. 유효성 검사
+    // 3. 최종 유효성 검사
     function valid() {
-        if(!isPermitted) {
-            alert("아이디 중복체크를 해주세요.");
-            usernameInput.readOnly = false;
+        if (!isUsernameAvailable) {
+            alert("아이디 중복체크를 해주세요");
             return false;
         }
 
         return true;
     }
+
+
 </script>
 
 {{> layout/footer}}

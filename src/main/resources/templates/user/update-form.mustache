@@ -6,13 +6,14 @@
         <div class="card-body">
             <form action="/user/update" method="post" enctype="application/x-www-form-urlencoded">
                 <div class="mb-3">
-                    <input value="{{validatedUser.username}}" type="text" class="form-control" placeholder="Enter username" disabled>
+                    <input value="{{sessionUser.username}}" type="text" class="form-control"
+                           placeholder="Enter username" name="username" disabled>
                 </div>
                 <div class="mb-3">
                     <input type="password" class="form-control" placeholder="Enter password" name="password">
                 </div>
                 <div class="mb-3">
-                    <input value="{{validatedUser.email}}" type="email" class="form-control" placeholder="Enter email"
+                    <input value="{{sessionUser.email}}" type="email" class="form-control" placeholder="Enter email"
                            name="email">
                 </div>
                 <button type="submit" class="btn btn-primary form-control">회원가입수정</button>

@@ -27,20 +27,6 @@ public class BoardRepositoryTest {
         // System.out.println("--------------------");
         // boardList.get(0).getUser().getUsername();
         // System.out.println("--------------------");
-        // eye
-        for (Board board : boardList) {
-            System.out.println(board);
-        }
-    }
 
-    @Test
-    public void findByIdJoinUser_test() {
-        // given
-        int id = 1;
-        // when
-        Board board = boardRepository.findByIdJoinUser(id);
-        // eye
-        System.out.println(board);
     }
-
 }

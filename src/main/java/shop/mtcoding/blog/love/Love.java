@@ -1,39 +1,43 @@
-package shop.mtcoding.blog.board;
+package shop.mtcoding.blog.love;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import shop.mtcoding.blog.board.Board;
 import shop.mtcoding.blog.user.User;
 
 import java.sql.Timestamp;
 
 @NoArgsConstructor
 @Getter
-@Table(name = "board_tb")
+@Table(
+        name = "love_tb",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "board_id"})
+        }
+)
 @Entity
-public class Board {
+public class Love {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String title;
-    private String content;
-    private Boolean isPublic;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user; // ORM
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Board board;
 
     @CreationTimestamp
     private Timestamp createdAt;
 
     @Builder
-    public Board(Integer id, String title, String content, Boolean isPublic, User user, Timestamp createdAt) {
+    public Love(Integer id, User user, Board board, Timestamp createdAt) {
         this.id = id;
-        this.title = title;
-        this.content = content;
-        this.isPublic = isPublic;
         this.user = user;
+        this.board = board;
         this.createdAt = createdAt;
     }
 }
