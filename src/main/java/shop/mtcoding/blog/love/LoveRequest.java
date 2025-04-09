@@ -10,10 +10,10 @@ public class LoveRequest {
     public static class SaveDTO {
         private Integer boardId;
 
-        public Love toEntity(User sessionUser) {
+        public Love toEntity(Integer sessionUserId) {
             return Love.builder()
                     .board(Board.builder().id(boardId).build())
-                    .user(sessionUser)
+                    .user(User.builder().id(sessionUserId).build())
                     .build();
         }
     }

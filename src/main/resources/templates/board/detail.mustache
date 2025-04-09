@@ -1,4 +1,7 @@
 {{> layout/header}}
+
+<input type="hidden" id="boardId" value="{{model.id}}">
+
 <div class="container p-5">
 
     <!-- 수정삭제버튼 -->
@@ -27,14 +30,14 @@
     <!-- AJAX 좋아요 영역 -->
     <div class="my-3 d-flex align-items-center">
         {{#model.isLove}}
-            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:red"
+            <i id="loveIcon" class="fa fa-heart" style="font-size:20px; color:red"
                onclick="deleteLove({{model.loveId}})"></i>
         {{/model.isLove}}
         {{^model.isLove}}
-            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:black"
+            <i id="loveIcon" class="fa fa-heart" style="font-size:20px; color:black"
                onclick="saveLove()"></i>
         {{/model.isLove}}
-        <span class="ms-1"><b id="likeCount">{{model.loveCount}}</b>명이 이 글을 좋아합니다</span>
+        <span class="ms-1"><b id="loveCount">{{model.loveCount}}</b>명이 이 글을 좋아합니다</span>
     </div>
 
     <!-- 댓글 -->
@@ -79,7 +82,12 @@
 </div>
 
 <script>
-    let boardId = {{model.id}};
+
+    // setInterval(()=>{
+    //     location.reload();
+    // }, 1000*10);
+
+    let boardId = document.querySelector("#boardId").value;
 
     async function saveLove() {
         let requestBody = {boardId: boardId};
@@ -88,28 +96,30 @@
             body: JSON.stringify(requestBody),
             headers: {"Content-Type": "application/json"}
         });
-        let responseBody = await response.json(); // { loveId, loveCount }
+        let responseBody = await response.json(); // response.text() (X)
+        console.log(responseBody);
 
         // DOM 업데이트
-        let icon = document.querySelector('#likeIcon');
-        let likeCountSpan = document.querySelector('#likeCount');
+        let icon = document.querySelector('#loveIcon');
+        let loveCount = document.querySelector('#loveCount');
         icon.style.color = 'red';
-        icon.setAttribute('onclick', `deleteLove(${responseBody.loveId})`);
-        likeCountSpan.textContent = responseBody.loveCount;
+        icon.setAttribute('onclick', `deleteLove(${responseBody.body.loveId})`);
+        loveCount.innerHTML = responseBody.body.loveCount;
     }
 
     async function deleteLove(loveId) {
         let response = await fetch(`/love/${loveId}`, {
             method: "DELETE"
         });
-        let responseBody = await response.json(); // { loveCount }
+        let responseBody = await response.json(); // response.text() (X)
+        console.log(responseBody);
 
         // DOM 업데이트
-        let icon = document.querySelector('#likeIcon');
-        let likeCountSpan = document.querySelector('#likeCount');
+        let icon = document.querySelector('#loveIcon');
+        let loveCount = document.querySelector('#loveCount');
         icon.style.color = 'black';
         icon.setAttribute('onclick', `saveLove()`);
-        likeCountSpan.textContent = responseBody.loveCount;
+        loveCount.innerHTML = responseBody.body.loveCount;
     }
 </script>
 
