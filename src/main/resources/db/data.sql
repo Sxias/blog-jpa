@@ -22,3 +22,14 @@ insert into love_tb(board_id, user_id, created_at)
 values (4, 2, now());
 insert into love_tb(board_id, user_id, created_at)
 values (4, 1, now());
+
+insert into reply_tb(board_id, user_id, content, created_at)
+values(4, 1, '댓글1', now());
+insert into reply_tb(board_id, user_id, content, created_at)
+values(4, 2, '댓글2', now());
+insert into reply_tb(board_id, user_id, content, created_at)
+values(4, 1, '댓글3', now());
+insert into reply_tb(board_id, user_id, content, created_at)
+values(3, 1, '댓글4', now());
+insert into reply_tb(board_id, user_id, content, created_at)
+values(2, 1, '댓글5', now());
