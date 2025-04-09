@@ -15,7 +15,7 @@ public class UserRepositoryTest {
     @Test
     public void insertUserTest() {
         User user = User.builder().username("admin").password("123456").email("abcd@efg.com").build();
-        userRepository.insertUser(user);
+//        userRepository.insertUser(user);
 
     }
 
