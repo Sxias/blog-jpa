@@ -1,4 +1,4 @@
-package shop.mtcoding.blog._core;
+package shop.mtcoding.blog._core.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

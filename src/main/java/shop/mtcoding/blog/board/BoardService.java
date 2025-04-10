@@ -3,6 +3,8 @@ package shop.mtcoding.blog.board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.blog._core.error.ex.Exception403;
+import shop.mtcoding.blog._core.error.ex.Exception404;
 import shop.mtcoding.blog.love.Love;
 import shop.mtcoding.blog.love.LoveRepository;
 import shop.mtcoding.blog.reply.Reply;
@@ -43,5 +45,28 @@ public class BoardService {
 
         BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId, isLove, loveCount.intValue(), loveId);
         return detailDTO;
+    }
+
+    // TODO : 글 수정
+    @Transactional
+    public void 글수정(BoardRequest.UpdateDTO updateDTO, Integer userId, Integer boardId) {
+        // 1. 글 불러오기 by boardId
+        Board board = boardRepository.findById(boardId);
+        // 1-1. 글이 없으면 Exception404
+        if(board == null) throw new Exception404("해당하는 글이 없습니다.");
+        // 2. 글 주인과 userId 비교 : 불일치 시 Exception403
+        if(!(board.getUser().getId().equals(userId))) throw new Exception403("권한이 없습니다.");
+        // 3. update (dirty checking)
+        board.update(updateDTO.getTitle(), updateDTO.getContent(), updateDTO.isPublicChecked());
+    }
+
+    // TODO : 글 삭제
+    @Transactional
+    public void 글삭제(Integer id) {
+        boardRepository.deleteById(id);
+    }
+
+    public Board 글수정화면(BoardRequest.UpdateDTO updateDTO, Integer id) {
+        return boardRepository.findByIdJoinUserAndReplies(id);
     }
 }

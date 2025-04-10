@@ -1,6 +1,7 @@
 package shop.mtcoding.blog.board;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import shop.mtcoding.blog._core.error.ex.Exception401;
+import shop.mtcoding.blog._core.error.ex.Exception404;
 import shop.mtcoding.blog.user.User;
 
 @RequiredArgsConstructor
@@ -51,7 +54,7 @@ public class BoardController {
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO saveDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
+        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
 
         boardService.글쓰기(saveDTO, sessionUser);
 
@@ -61,7 +64,34 @@ public class BoardController {
     @GetMapping("/board/save-form")
     public String saveForm() {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
+        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
         return "board/save-form";
     }
+
+    // TODO : 글 수정 및 삭제
+    @GetMapping("/board/{id}/update-form")
+    public String updateForm(@PathVariable("id") Integer id, BoardRequest.UpdateDTO updateDTO, HttpServletRequest request) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
+        Board boardPS = boardService.글수정화면(updateDTO, id);
+        request.setAttribute("model", boardPS);
+        return "board/update-form";
+    }
+
+    @PostMapping("/board/{id}/update")
+    public String update(@PathVariable("id") Integer id, BoardRequest.UpdateDTO updateDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
+        boardService.글수정(updateDTO, sessionUser.getId(), id);
+        return "redirect:/board/"+id;
+    }
+
+    @PostMapping("/board/{id}/delete")
+    public String delete(@PathVariable("id") Integer id) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
+        boardService.글삭제(id);
+        return "redirect:/";
+    }
+
 }

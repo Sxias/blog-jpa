@@ -46,4 +46,10 @@ public class Board {
         this.user = user;
         this.createdAt = createdAt;
     }
+
+    public void update(String title, String content, Boolean isPublic) {
+        this.title = title;
+        this.content = content;
+        this.isPublic = isPublic;
+    }
 }

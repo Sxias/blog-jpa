@@ -20,4 +20,15 @@ public class BoardRequest {
                     .build();
         }
     }
+
+    @Data
+    public static class UpdateDTO {
+        private String title;
+        private String content;
+        private String isPublic; // "on" or null
+
+        public Boolean isPublicChecked() {
+            return "on".equals(isPublic);
+        }
+    }
 }

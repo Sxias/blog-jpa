@@ -44,4 +44,13 @@ public class BoardRepository {
     public void save(Board board) {
         em.persist(board);
     }
+
+    public void update(BoardRequest.SaveDTO saveDTO) {
+    }
+
+    public void deleteById(Integer id) {
+        em.createQuery("delete Board b where b.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
 }
