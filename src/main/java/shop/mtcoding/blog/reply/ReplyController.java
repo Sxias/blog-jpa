@@ -24,11 +24,20 @@ public class ReplyController {
         return "redirect:/board/"+saveDTO.getBoardId();
     }
 
+//    @PostMapping("/reply/{id}/delete")
+//    public String delete(@PathVariable("id") int replyId, @RequestParam int boardId, HttpSession session) {
+//        User sessionUser = (User) session.getAttribute("sessionUser");
+//        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
+//        replyService.댓글삭제(replyId);
+//        return "redirect:/board/"+boardId;
+//    }
+
     @PostMapping("/reply/{id}/delete")
-    public String delete(@PathVariable("id") int replyId, @RequestParam int boardId, HttpSession session) {
+    public String deletev2(@PathVariable("id") int id, HttpSession session) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
-        replyService.댓글삭제(replyId);
+
+        int boardId = replyService.댓글삭제2(id, sessionUser.getId());
         return "redirect:/board/"+boardId;
     }
 }
