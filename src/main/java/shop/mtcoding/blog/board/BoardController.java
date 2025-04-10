@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import shop.mtcoding.blog.user.User;
 
 @RequiredArgsConstructor
@@ -14,6 +15,16 @@ import shop.mtcoding.blog.user.User;
 public class BoardController {
     private final BoardService boardService;
     private final HttpSession session;
+
+    @GetMapping("/v2/board/{id}")
+    public @ResponseBody BoardResponse.DetailDTO v2detail(@PathVariable("id") Integer id) {
+//        User sessionUser = (User) session.getAttribute("sessionUser");
+        Integer sessionUserId = 1;
+//        (sessionUser == null ? null : sessionUser.getId());
+        BoardResponse.DetailDTO detailDTO = boardService.글상세보기(id, sessionUserId);
+
+        return detailDTO;
+    }
 
     @GetMapping("/board/{id}")
     public String detail(@PathVariable("id") Integer id, HttpServletRequest request) {

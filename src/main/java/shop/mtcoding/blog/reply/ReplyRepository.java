@@ -19,4 +19,14 @@ public class ReplyRepository {
         List<Reply> replies = q.getResultList();
         return replies;
     }
+
+    public void save(Reply reply) {
+        em.persist(reply);
+    }
+
+    public void deleteById(int id) {
+        em.createQuery("delete from Reply r where r.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
 }

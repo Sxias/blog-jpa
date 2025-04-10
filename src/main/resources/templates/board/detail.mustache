@@ -45,7 +45,8 @@
         <!-- 댓글등록 -->
         <div class="card-body">
             <form action="/reply/save" method="post">
-                <textarea class="form-control" rows="2" name="comment"></textarea>
+                <input type="hidden" name="boardId" value="{{model.id}}">
+                <textarea class="form-control" rows="2" name="content"></textarea>
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-outline-primary mt-1">댓글등록</button>
                 </div>
@@ -61,12 +62,15 @@
             {{#model.replies}}
             <div class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="d-flex">
-                    <div class="px-1 me-1 bg-primary text-white rounded">{{user.username}}</div>
+                    <div class="px-1 me-1 bg-primary text-white rounded">{{username}}</div>
                     <div>{{content}}</div>
                 </div>
+                {{#isOwner}}
                 <form action="/reply/{{id}}/delete" method="post">
+                    <input type="hidden" name="boardId" value="{{model.id}}">
                     <button class="btn">🗑</button>
                 </form>
+                {{/isOwner}}
             </div>
             {{/model.replies}}
 
