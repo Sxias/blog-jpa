@@ -31,8 +31,8 @@ public class Board {
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<Reply>();
 
-//    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-//    private List<Love> loves = new ArrayList<Love>();
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Love> loves = new ArrayList<Love>();
 
     @CreationTimestamp
     private Timestamp createdAt;

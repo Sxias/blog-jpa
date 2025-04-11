@@ -62,12 +62,19 @@ public class BoardService {
 
     // TODO : 글 삭제
     @Transactional
-    public void 글삭제(Integer id) {
-        boardRepository.deleteById(id);
+    public void 글삭제(Integer boardId, Integer userId) {
+        // 1. 글 불러오기 by boardId
+        Board board = boardRepository.findByIdJoinUserAndReplies(boardId);
+        // 1-1. 글이 없으면 Exception404
+        if(board == null) throw new Exception404("해당하는 글이 없습니다.");
+        // 2. 글 주인과 userId 비교 : 불일치 시 Exception403
+        if(!(board.getUser().getId().equals(userId))) throw new Exception403("권한이 없습니다.");
+        // 3. 글 삭제
+        boardRepository.deleteById(boardId);
     }
 
     public Board 글수정화면(Integer boardId, Integer sessionUserId) {
-        Board board = boardRepository.findByIdJoinUserAndReplies(boardId);
+        Board board = boardRepository.findById(boardId);
         if(board == null) throw new Exception404("해당하는 글이 없습니다.");
         if(!(board.getUser().getId().equals(sessionUserId))) throw new Exception403("권한이 없습니다.");
         return board;

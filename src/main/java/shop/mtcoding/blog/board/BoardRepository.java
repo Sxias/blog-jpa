@@ -18,12 +18,6 @@ public class BoardRepository {
         return (Board) query.getSingleResult();
     }
 
-    public Board findByIdJoinUser(Integer id) {
-        Query query = em.createQuery("select b from Board b join fetch b.user where b.id = :id", Board.class);
-        query.setParameter("id", id);
-        return (Board) query.getSingleResult();
-    }
-
     public Board findById(Integer id) {
         return em.find(Board.class, id);
     }
@@ -45,12 +39,7 @@ public class BoardRepository {
         em.persist(board);
     }
 
-    public void update(BoardRequest.SaveDTO saveDTO) {
-    }
-
     public void deleteById(Integer id) {
-        em.createQuery("delete Board b where b.id = :id")
-                .setParameter("id", id)
-                .executeUpdate();
+        em.remove(em.find(Board.class, id));
     }
 }
