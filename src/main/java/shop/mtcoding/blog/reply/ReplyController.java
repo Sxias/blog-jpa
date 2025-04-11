@@ -18,9 +18,7 @@ public class ReplyController {
     @PostMapping("/reply/save")
     public String save(ReplyRequest.SaveDTO saveDTO, HttpSession session) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
         replyService.댓글저장(saveDTO, sessionUser);
-
         return "redirect:/board/"+saveDTO.getBoardId();
     }
 
@@ -35,8 +33,6 @@ public class ReplyController {
     @PostMapping("/reply/{id}/delete")
     public String deletev2(@PathVariable("id") int id, HttpSession session) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다");
-
         int boardId = replyService.댓글삭제2(id, sessionUser.getId());
         return "redirect:/board/"+boardId;
     }

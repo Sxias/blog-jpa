@@ -13,13 +13,13 @@ public class GlobalExceptionHandler {
     // 400 Bad Request
     @ExceptionHandler(Exception400.class)
     public String ex400(Exception400 e) {
-        return Script.alert(e.getMessage());
+        return Script.back(e.getMessage());
     }
 
     // 401 Unauthorized
     @ExceptionHandler(Exception401.class)
     public String ex401(Exception401 e) {
-        return Script.alert(e.getMessage());
+        return Script.href(e.getMessage(), "/login-form");
     }
 
     // 403 Forbidden
@@ -37,6 +37,7 @@ public class GlobalExceptionHandler {
     // Unknown Server Error
     @ExceptionHandler(Exception.class)
     public String exUnknown(Exception e) {
+        System.out.println("Error Log : " + e.getMessage());
         return Script.back("관리자에게 문의해주세요.");
     }
 

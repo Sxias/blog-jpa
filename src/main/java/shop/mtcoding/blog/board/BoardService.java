@@ -66,7 +66,10 @@ public class BoardService {
         boardRepository.deleteById(id);
     }
 
-    public Board 글수정화면(BoardRequest.UpdateDTO updateDTO, Integer id) {
-        return boardRepository.findByIdJoinUserAndReplies(id);
+    public Board 글수정화면(Integer boardId, Integer sessionUserId) {
+        Board board = boardRepository.findByIdJoinUserAndReplies(boardId);
+        if(board == null) throw new Exception404("해당하는 글이 없습니다.");
+        if(!(board.getUser().getId().equals(sessionUserId))) throw new Exception403("권한이 없습니다.");
+        return board;
     }
 }

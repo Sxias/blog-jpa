@@ -16,8 +16,6 @@ public class LoveController {
     @PostMapping("/love")
     public Resp<?> saveLove(@RequestBody LoveRequest.SaveDTO reqDTO){
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new ExceptionApi401("인증이 필요합니다");
-
         LoveResponse.SaveDTO respDTO = loveService.좋아요(reqDTO, sessionUser.getId());
 
         return Resp.ok(respDTO);
@@ -26,8 +24,6 @@ public class LoveController {
     @DeleteMapping("/love/{id}")
     public Resp<?> deleteLove(@PathVariable("id") Integer id){
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new ExceptionApi401("인증이 필요합니다");
-
         LoveResponse.DeleteDTO respDTO = loveService.좋아요취소(id, sessionUser.getId());
 
         return Resp.ok(respDTO);

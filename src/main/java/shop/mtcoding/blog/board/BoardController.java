@@ -54,8 +54,6 @@ public class BoardController {
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO saveDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
-
         boardService.글쓰기(saveDTO, sessionUser);
 
         return "redirect:/";
@@ -63,17 +61,14 @@ public class BoardController {
 
     @GetMapping("/board/save-form")
     public String saveForm() {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
         return "board/save-form";
     }
 
     // TODO : 글 수정 및 삭제
     @GetMapping("/board/{id}/update-form")
-    public String updateForm(@PathVariable("id") Integer id, BoardRequest.UpdateDTO updateDTO, HttpServletRequest request) {
+    public String updateForm(@PathVariable("id") Integer id, HttpServletRequest request) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
-        Board boardPS = boardService.글수정화면(updateDTO, id);
+        Board boardPS = boardService.글수정화면(id, sessionUser.getId());
         request.setAttribute("model", boardPS);
         return "board/update-form";
     }
@@ -81,15 +76,12 @@ public class BoardController {
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable("id") Integer id, BoardRequest.UpdateDTO updateDTO) {
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
         boardService.글수정(updateDTO, sessionUser.getId(), id);
         return "redirect:/board/"+id;
     }
 
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable("id") Integer id) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) throw new Exception401("인증이 필요합니다");
         boardService.글삭제(id);
         return "redirect:/";
     }
