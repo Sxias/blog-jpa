@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import shop.mtcoding.blog._core.error.anno.MyAfter;
+import shop.mtcoding.blog._core.error.anno.MyAround;
+import shop.mtcoding.blog._core.error.anno.MyBefore;
 import shop.mtcoding.blog._core.error.ex.Exception400;
 import shop.mtcoding.blog._core.util.Resp;
 
@@ -23,6 +26,13 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final HttpSession session;
+
+    @MyAround
+    @GetMapping("/v2/around")
+    public @ResponseBody String around() {
+        System.out.println("around 호출됨");
+        return "good";
+    }
 
     // ViewResolver -> prefix = /templates/ -> suffix = .mustache
     @GetMapping("/user/update-form")
@@ -49,14 +59,18 @@ public class UserController {
         return Resp.ok(dto);
     }
 
+    @MyBefore
     @GetMapping("/join-form")
     public String joinForm() {
+        System.out.println("join-form 호출됨");
         return "user/join-form";
     }
 
+    @MyAfter
     // @Valid : 매개변수 내 Validation (Pattern, Size 등) 검사
     @PostMapping("/join")
     public String join(@Valid UserRequest.JoinDTO joinDTO, Errors errors) {
+        System.out.println("join 호출됨");
 
         /*  // 유효성 검사
         boolean r1 = Pattern.matches("^[a-zA-Z0-9]{2,20}$", joinDTO.getUsername());
