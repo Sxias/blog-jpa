@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.love;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import shop.mtcoding.blog.board.Board;
 import shop.mtcoding.blog.user.User;
@@ -8,6 +9,7 @@ public class LoveRequest {
 
     @Data
     public static class SaveDTO {
+        @NotNull(message = "해당하는 글이 없습니다.")
         private Integer boardId;
 
         public Love toEntity(Integer sessionUserId) {

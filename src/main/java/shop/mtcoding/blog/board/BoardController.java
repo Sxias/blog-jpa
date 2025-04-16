@@ -1,16 +1,15 @@
 package shop.mtcoding.blog.board;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import shop.mtcoding.blog._core.error.ex.Exception401;
-import shop.mtcoding.blog._core.error.ex.Exception404;
 import shop.mtcoding.blog.user.User;
 
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/save")
-    public String save(BoardRequest.SaveDTO saveDTO) {
+    public String save(@Valid BoardRequest.SaveDTO saveDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         boardService.글쓰기(saveDTO, sessionUser);
 
@@ -74,10 +73,10 @@ public class BoardController {
     }
 
     @PostMapping("/board/{id}/update")
-    public String update(@PathVariable("id") Integer id, BoardRequest.UpdateDTO updateDTO) {
+    public String update(@PathVariable("id") Integer id, @Valid BoardRequest.UpdateDTO updateDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         boardService.글수정(updateDTO, sessionUser.getId(), id);
-        return "redirect:/board/"+id;
+        return "redirect:/board/" + id;
     }
 
     @PostMapping("/board/{id}/delete")
