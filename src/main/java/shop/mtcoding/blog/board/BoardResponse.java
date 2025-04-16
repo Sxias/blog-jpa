@@ -54,13 +54,30 @@ public class BoardResponse {
 
             List<ReplyDTO> repliesDTO = new ArrayList<>();
 
-            for(Reply reply : board.getReplies()) {
+            for (Reply reply : board.getReplies()) {
                 ReplyDTO replyDTO = new ReplyDTO(reply, sessionUserId);
                 repliesDTO.add(replyDTO);
             }
 
             this.replies = repliesDTO;
 
+        }
+    }
+
+    @Data
+    public static class MainDTO {
+        private Integer prev;
+        private Integer next;
+
+        private Boolean isFirst;
+        private Boolean isLast;
+
+        private List<Board> boards;
+
+        public MainDTO(Integer prev, Integer next, List<Board> boards) {
+            this.prev = prev;
+            this.next = next;
+            this.boards = boards;
         }
     }
 }

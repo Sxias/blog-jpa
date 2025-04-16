@@ -7,11 +7,8 @@ import shop.mtcoding.blog._core.error.ex.Exception403;
 import shop.mtcoding.blog._core.error.ex.Exception404;
 import shop.mtcoding.blog.love.Love;
 import shop.mtcoding.blog.love.LoveRepository;
-import shop.mtcoding.blog.reply.Reply;
 import shop.mtcoding.blog.reply.ReplyRepository;
 import shop.mtcoding.blog.user.User;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -20,11 +17,11 @@ public class BoardService {
     private final LoveRepository loveRepository;
     private final ReplyRepository replyRepository;
 
-    public List<Board> 글목록보기(Integer userId) {
+    public BoardResponse.MainDTO 글목록보기(Integer userId, Integer page) {
         if (userId == null) {
-            return boardRepository.findAll();
+            return new BoardResponse.MainDTO(page - 1, page + 1, boardRepository.findAll(page));
         } else {
-            return boardRepository.findAll(userId);
+            return new BoardResponse.MainDTO(page - 1, page + 1, boardRepository.findAll(userId, page));
         }
     }
 
@@ -53,9 +50,9 @@ public class BoardService {
         // 1. 글 불러오기 by boardId
         Board board = boardRepository.findById(boardId);
         // 1-1. 글이 없으면 Exception404
-        if(board == null) throw new Exception404("해당하는 글이 없습니다.");
+        if (board == null) throw new Exception404("해당하는 글이 없습니다.");
         // 2. 글 주인과 userId 비교 : 불일치 시 Exception403
-        if(!(board.getUser().getId().equals(userId))) throw new Exception403("권한이 없습니다.");
+        if (!(board.getUser().getId().equals(userId))) throw new Exception403("권한이 없습니다.");
         // 3. update (dirty checking)
         board.update(updateDTO.getTitle(), updateDTO.getContent(), updateDTO.isPublicChecked());
     }
@@ -66,17 +63,17 @@ public class BoardService {
         // 1. 글 불러오기 by boardId
         Board board = boardRepository.findByIdJoinUserAndReplies(boardId);
         // 1-1. 글이 없으면 Exception404
-        if(board == null) throw new Exception404("해당하는 글이 없습니다.");
+        if (board == null) throw new Exception404("해당하는 글이 없습니다.");
         // 2. 글 주인과 userId 비교 : 불일치 시 Exception403
-        if(!(board.getUser().getId().equals(userId))) throw new Exception403("권한이 없습니다.");
+        if (!(board.getUser().getId().equals(userId))) throw new Exception403("권한이 없습니다.");
         // 3. 글 삭제
         boardRepository.deleteById(boardId);
     }
 
     public Board 글수정화면(Integer boardId, Integer sessionUserId) {
         Board board = boardRepository.findById(boardId);
-        if(board == null) throw new Exception404("해당하는 글이 없습니다.");
-        if(!(board.getUser().getId().equals(sessionUserId))) throw new Exception403("권한이 없습니다.");
+        if (board == null) throw new Exception404("해당하는 글이 없습니다.");
+        if (!(board.getUser().getId().equals(sessionUserId))) throw new Exception403("권한이 없습니다.");
         return board;
     }
 }

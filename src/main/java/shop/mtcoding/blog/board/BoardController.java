@@ -6,10 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog.user.User;
 
 @RequiredArgsConstructor
@@ -38,13 +35,13 @@ public class BoardController {
     }
 
     @GetMapping("/")
-    public String list(HttpServletRequest request) {
+    public String list(HttpServletRequest request, @RequestParam(required = false, value = "page", defaultValue = "0") Integer page) {
         User sessionUser = (User) session.getAttribute("sessionUser");
 
         if (sessionUser == null) {
-            request.setAttribute("models", boardService.글목록보기(null));
+            request.setAttribute("model", boardService.글목록보기(null, page));
         } else {
-            request.setAttribute("models", boardService.글목록보기(sessionUser.getId()));
+            request.setAttribute("model", boardService.글목록보기(sessionUser.getId(), page));
         }
 
         return "board/list";
