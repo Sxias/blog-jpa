@@ -27,8 +27,13 @@
 
 
 	<ul class="pagination d-flex justify-content-center">
-		<li class="page-item"><a class="page-link" href="?page={{model.prev}}">Previous</a></li>
-		<li class="page-item"><a class="page-link" href="?page={{model.next}}">Next</a></li>
+		<li class="page-item {{#model.isFirst}} disabled {{/model.isFirst}}"><a class="page-link"
+		                                                                        href="?page={{model.prev}}
+			">Previous</a></li>
+		<li class="page-item"><a class="page-link" href="?page=0">0</a></li>
+		<li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+		<li class="page-item {{#model.isLast}} disabled {{/model.isLast}}"><a class="page-link"
+		                                                                      href="?page={{model.next}}">Next</a></li>
 	</ul>
 
 </div>

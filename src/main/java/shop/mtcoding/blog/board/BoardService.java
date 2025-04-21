@@ -19,9 +19,9 @@ public class BoardService {
 
     public BoardResponse.MainDTO 글목록보기(Integer userId, Integer page) {
         if (userId == null) {
-            return new BoardResponse.MainDTO(page - 1, page + 1, boardRepository.findAll(page));
+            return new BoardResponse.MainDTO(boardRepository.findAll(page), page, boardRepository.totalCount().intValue());
         } else {
-            return new BoardResponse.MainDTO(page - 1, page + 1, boardRepository.findAll(userId, page));
+            return new BoardResponse.MainDTO(boardRepository.findAll(userId, page), page, boardRepository.totalCount(userId).intValue());
         }
     }
 

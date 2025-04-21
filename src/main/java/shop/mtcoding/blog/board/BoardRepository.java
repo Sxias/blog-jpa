@@ -47,6 +47,23 @@ public class BoardRepository {
         return query.getResultList();
     }
 
+    // 그룹 함수 : Long 리턴
+    // 1. 로그인 안 했을 때 : 4개
+    public Long totalCount() {
+        Query q = em.createQuery("select count(b) from Board b where b.isPublic = true", Long.class);
+        return (Long) q.getSingleResult();
+    }
+
+    // 2-1. ssar로 로그인 했을 때 : 5개
+    // 2-2. cos로 로그인 했을 때 : 4개
+    public Long totalCount(int userId) {
+        Query q = em.createQuery("select count(b) from Board b where b.isPublic = true or b.user.id = :userId", Long.class);
+        q.setParameter("userId", userId);
+        return (Long) q.getSingleResult();
+    }
+
+
+
     /*public List<Board> findAll(Integer userId) {
         String sql = "select b from Board b where b.isPublic = true or b.user.id = :userId order by b.id desc";
         Query query = em.createQuery(sql, Board.class);

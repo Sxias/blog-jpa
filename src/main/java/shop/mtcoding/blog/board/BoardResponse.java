@@ -68,16 +68,30 @@ public class BoardResponse {
     public static class MainDTO {
         private Integer prev;
         private Integer next;
-
-        private Boolean isFirst;
-        private Boolean isLast;
+        private Integer current;
+        private Integer totalCount;
+        private Integer totalPage;
+        private Integer size;
+        private Boolean isFirst; // currentPage == 0
+        private Boolean isLast; // totalCount, totalPage == currentPage
 
         private List<Board> boards;
 
-        public MainDTO(Integer prev, Integer next, List<Board> boards) {
-            this.prev = prev;
-            this.next = next;
+        private List<Integer> numbers; // 20개 [1, 2, 3, 4, 5, 6, 7] -> {{#model.numbers}} -> {{.}}
+
+        public MainDTO(List<Board> boards, Integer current, Integer totalCount) {
             this.boards = boards;
+            this.prev = current - 1;
+            this.next = current + 1;
+            this.size = 3;
+            this.totalCount = totalCount; // given
+            this.totalPage = makeTotalPage(totalCount, size);
+            this.isFirst = current == 0;
+            this.isLast = current == totalPage - 1;
+        }
+
+        private Integer makeTotalPage(int totalCount, int size) {
+            return totalCount / size + (totalCount % size == 0 ? 0 : 1);
         }
     }
 }
