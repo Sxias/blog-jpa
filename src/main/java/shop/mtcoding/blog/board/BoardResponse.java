@@ -74,6 +74,7 @@ public class BoardResponse {
         private Integer size;
         private Boolean isFirst; // currentPage == 0
         private Boolean isLast; // totalCount, totalPage == currentPage
+        private Integer pageSize;
 
         private List<Board> boards;
 
@@ -88,6 +89,35 @@ public class BoardResponse {
             this.totalPage = makeTotalPage(totalCount, size);
             this.isFirst = current == 0;
             this.isLast = current == totalPage - 1;
+            this.pageSize = 5;
+            this.numbers = makeNumbers(current, pageSize, totalPage);
+            // 1. 페이지 전체 넣기
+            /*
+            for (int i = 0; i < totalCount; i++) {
+                this.numbers.add(i);
+            }
+            */
+            // 2. 페이지 묶음
+            /*for (int i = 0; i < pageSize; i++) {
+                pageIndex = current / pageSize; // 현재 페이지 index : 페이지 목차
+                if (i % pageSize == 0) numbers.clear(); // 페이지를 불러올 때마다 페이지 리스트 클리어
+                int page = pageIndex * pageSize + i; // 페이지 변수 : 페이지 index * pageSize + i
+                // 0 ~ 4 : 0 * 5 + 0~4, 5 ~ 9 : 1 * 5 + 0~4, ...
+                if (page < totalPage) numbers.add(page); // 최대 페이지 전까지 추가
+            }*/
+        }
+
+        private List<Integer> makeNumbers(int current, int pageSize, int totalPage) {
+            List<Integer> numbers = new ArrayList<>();
+
+            int start = (current / pageSize) * pageSize;
+            int end = Math.min(start + pageSize, totalPage);
+
+            for (int i = start; i < end; i++) {
+                numbers.add(i);
+            }
+
+            return numbers;
         }
 
         private Integer makeTotalPage(int totalCount, int size) {
