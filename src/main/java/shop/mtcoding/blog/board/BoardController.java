@@ -35,15 +35,16 @@ public class BoardController {
     }
 
     @GetMapping("/")
-    public String list(HttpServletRequest request, @RequestParam(required = false, value = "page", defaultValue = "0") Integer page) {
+    public String list(HttpServletRequest request, @RequestParam(required = false, value = "page", defaultValue = "0") Integer page,
+                       @RequestParam(required = false, value = "keyword", defaultValue = "") String keyword) {
         User sessionUser = (User) session.getAttribute("sessionUser");
 
         if (sessionUser == null) {
-            request.setAttribute("model", boardService.글목록보기(null, page));
+            request.setAttribute("model", boardService.글목록보기(null, page, keyword));
         } else {
-            request.setAttribute("model", boardService.글목록보기(sessionUser.getId(), page));
+            request.setAttribute("model", boardService.글목록보기(sessionUser.getId(), page, keyword));
         }
-
+        System.out.println("keyword : " + keyword);
         return "board/list";
     }
 

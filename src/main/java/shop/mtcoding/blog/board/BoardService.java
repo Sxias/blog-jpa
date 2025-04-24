@@ -17,11 +17,11 @@ public class BoardService {
     private final LoveRepository loveRepository;
     private final ReplyRepository replyRepository;
 
-    public BoardResponse.MainDTO 글목록보기(Integer userId, Integer page) {
+    public BoardResponse.MainDTO 글목록보기(Integer userId, Integer page, String keyword) {
         if (userId == null) {
-            return new BoardResponse.MainDTO(boardRepository.findAll(page), page, boardRepository.totalCount().intValue());
+            return new BoardResponse.MainDTO(boardRepository.findAll(page, keyword), page, boardRepository.totalCount(keyword).intValue(), keyword);
         } else {
-            return new BoardResponse.MainDTO(boardRepository.findAll(userId, page), page, boardRepository.totalCount(userId).intValue());
+            return new BoardResponse.MainDTO(boardRepository.findAll(userId, page, keyword), page, boardRepository.totalCount(userId, keyword).intValue(), keyword);
         }
     }
 

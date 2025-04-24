@@ -75,12 +75,13 @@ public class BoardResponse {
         private Boolean isFirst; // currentPage == 0
         private Boolean isLast; // totalCount, totalPage == currentPage
         private Integer pageSize;
+        private String keyword;
 
         private List<Board> boards;
 
         private List<Integer> numbers; // 20개 [1, 2, 3, 4, 5, 6, 7] -> {{#model.numbers}} -> {{.}}
 
-        public MainDTO(List<Board> boards, Integer current, Integer totalCount) {
+        public MainDTO(List<Board> boards, Integer current, Integer totalCount, String keyword) {
             this.boards = boards;
             this.prev = current - 1;
             this.next = current + 1;
@@ -91,6 +92,8 @@ public class BoardResponse {
             this.isLast = current == totalPage - 1;
             this.pageSize = 5;
             this.numbers = makeNumbers(current, pageSize, totalPage);
+            // keyword 값이 있거나 null
+            this.keyword = keyword;
             // 1. 페이지 전체 넣기
             /*
             for (int i = 0; i < totalCount; i++) {

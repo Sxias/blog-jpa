@@ -29,37 +29,60 @@ public class BoardRepository {
     }*/
 
     // localhost:8080?page=0
-    public List<Board> findAll(int page) {
-        String sql = "select b from Board b where b.isPublic = true order by b.id desc";
+    public List<Board> findAll(int page, String keyword) {
+        String sql = "";
+        if (!(keyword.isBlank()))
+            sql += "select b from Board b where b.isPublic = true and b.title like :keyword order by b.id desc";
+        else sql += "select b from Board b where b.isPublic = true order by b.id desc";
         Query query = em.createQuery(sql, Board.class);
+        // keyword를 포함 : title like %keyword%
+        if (!(keyword.isBlank())) query.setParameter("keyword", "%" + keyword + "%");
         query.setFirstResult(page * 3);
         query.setMaxResults(3);
 
         return query.getResultList();
     }
 
-    public List<Board> findAll(Integer userId, int page) {
-        String sql = "select b from Board b where b.isPublic = true or b.user.id = :userId order by b.id desc";
+    public List<Board> findAll(Integer userId, int page, String keyword) {
+        String sql = "";
+        if (!(keyword.isBlank()))
+            sql += "select b from Board b where b.isPublic = true or b.user.id = :userId and b.title like :keyword order by b.id desc";
+        else sql += "select b from Board b where b.isPublic = true or b.user.id = :userId order by b.id desc";
         Query query = em.createQuery(sql, Board.class);
+        // keyword를 포함 : title like %keyword%
+        if (!(keyword.isBlank())) query.setParameter("keyword", "%" + keyword + "%");
         query.setParameter("userId", userId);
         query.setFirstResult(page * 3);
         query.setMaxResults(3);
+
         return query.getResultList();
     }
 
     // 그룹 함수 : Long 리턴
     // 1. 로그인 안 했을 때 : 4개
-    public Long totalCount() {
-        Query q = em.createQuery("select count(b) from Board b where b.isPublic = true", Long.class);
-        return (Long) q.getSingleResult();
+    public Long totalCount(String keyword) {
+        String sql = "";
+        if (!(keyword.isBlank()))
+            sql += "select count(b) from Board b where b.isPublic = true and b.title like :keyword";
+        else sql += "select count(b) from Board b where b.isPublic = true";
+        Query query = em.createQuery(sql, Long.class);
+        // keyword를 포함 : title like %keyword%
+        if (!(keyword.isBlank())) query.setParameter("keyword", "%" + keyword + "%");
+        return (Long) query.getSingleResult();
     }
 
     // 2-1. ssar로 로그인 했을 때 : 5개
     // 2-2. cos로 로그인 했을 때 : 4개
-    public Long totalCount(int userId) {
-        Query q = em.createQuery("select count(b) from Board b where b.isPublic = true or b.user.id = :userId", Long.class);
-        q.setParameter("userId", userId);
-        return (Long) q.getSingleResult();
+    public Long totalCount(int userId, String keyword) {
+        String sql = "";
+        if (!(keyword.isBlank()))
+            sql += "select count(b) from Board b where b.isPublic = true or b.user.id = :userId and b.title like :keyword";
+        else sql += "select count(b) from Board b where b.isPublic = true or b.user.id = :userId";
+        Query query = em.createQuery(sql, Long.class);
+        // keyword를 포함 : title like %keyword%
+        if (!(keyword.isBlank())) query.setParameter("keyword", "%" + keyword + "%");
+        query.setParameter("userId", userId);
+        return (Long) query.getSingleResult();
     }
 
 
